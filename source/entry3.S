@@ -11,18 +11,26 @@
 #include "asm.h"
 
 globalfunc entry3
-    // Install dummy vector table; each entry branches-to-self
+    // ! Install dummy vector table; each entry branches-to-self
     ADRP    x0, dummy_vectors
     MSR     VBAR_EL3, x0
+    // @ adrp shift left 12 bits, lower 12 bits are masked. 
+    // @ but "RES0" only 11 bits, not sure what will be happened if masked the "11" bit
+    /* 63 62 61 60 59 58 57 56 55 54 53 52 51 50 49 48 47 46 45 44 43 42 41 40 39 38 37 36 35 34 33 32
+                                        Vector Base Address
+                         Vector Base Address                                     RES0
+       31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 | 10 9 8 7 6 5 4 3 2 1 0          */
 
     //
-    // Configure SCR_EL3
+    // Configure SCR_EL3 // ! configuration of the current Security state
     //
     //   10:10 RW       x1      make EL2 be 64-bit
-    //   08:08 HCE      x1      enable HVC instructions
+    //   08:08 HCE      x1      enable HVC instructions (hypervisor call)
     //   05:04 RES1     x3      reserved
-    //   00:00 NS       x1      switch to Normal world
+    //   00:00 NS       x1      switch to Normal world (lower than EL3 are in Non-secure state)
     //
+    //  010100110001 
+    // ! w0 : 32 bits register ; x0 : 64 bits register
     MOV     w0, #0x531
     MSR     SCR_EL3, x0
 
