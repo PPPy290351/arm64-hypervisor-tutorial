@@ -37,13 +37,13 @@ globalfunc entry3
     //
     // Configure SCTLR_EL2
     //
-    //   29:28 RES1     x3      reserved
-    //   23:22 RES1     x3      reserved
-    //   18:18 RES1     x1      reserved
-    //   16:16 RES1     x1      reserved
+    //   29:28 RES1     x3      reserved    // @ Bit[28] : memory accesses by A32 and T32 load store multiple are marked at stage 1 are not trapped.  Bit[29] : ordering and interrupt behavior of A32 and T32 load store multiple at EL0 is as defined for ARMv8.0
+    //   23:22 RES1     x3      reserved    // @ Bit[23] : value of PSTATE.PAN is left unchanged on taking an exception to EL2.  Bit[22] : taking of an exception to EL2 is a context sychronization event.
+    //   18:18 RES1     x1      reserved    // @ Set "traps execution of WFE instructions at EL0 to EL2" to not cause any instructions to be trapped. 
+    //   16:16 RES1     x1      reserved    // @ not cause any instructions to be trapped by WFI instructions at EL0 to EL2
     //   12:12 I        x0      disable allocation of instrs into unified $s
-    //   11:11 RES1     x1      reserved
-    //   05:04 RES1     x3      reserved
+    //   11:11 RES1     x1      reserved    // @ an exception return from EL2 is a context synchronization event.
+    //   05:04 RES1     x3      reserved    // @ EL0 execution of the CP15DMB, CP15DSB, CP15ISB instructions is enabled.
     //   02:02 C        x0      disable allocation of data into data/unified $s
     //   00:00 M        x0      disable MMU
     //
